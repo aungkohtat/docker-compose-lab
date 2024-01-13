@@ -4,6 +4,8 @@
 - Step 1: Create docker network
 
 - `docker network create mongo-network `
+
+
 ```bash
 gitpod /workspace/docker-compose-lab (main) $ docker network ls
 NETWORK ID     NAME            DRIVER    SCOPE
@@ -13,10 +15,11 @@ e370b4095bd6   mongo-network   bridge    local
 b079c3cbc4fe   none            null      local
 gitpod /workspace/docker-compose-lab (main) $ 
 
+``````
+
 - Step 2: start mongodb
 
-- `docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password --name mongodb --net mongo-network mongo    
-`
+- `docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password --name mongodb --net mongo-network mongo`
 
 ```bash
 gitpod /workspace/docker-compose-lab (main) $ docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password --name mongodb --net mongo-network mongo    
@@ -333,3 +336,151 @@ gitpod /workspace/docker-compose-lab (main) $
 ```
 
 
+- `docker compose --project-name projects -f docker-compose.yaml up -d`
+
+```bash
+
+gitpod /workspace/docker-compose-lab (main) $ docker compose --project-name projects -f docker-compose.yaml up -d
+[+] Building 0.5s (10/10) FINISHED                                                                                    docker:default
+ => [my-app internal] load .dockerignore                                                                                        0.0s
+ => => transferring context: 2B                                                                                                 0.0s
+ => [my-app internal] load build definition from Dockerfile                                                                     0.0s
+ => => transferring dockerfile: 346B                                                                                            0.0s
+ => [my-app internal] load metadata for docker.io/library/node:20-alpine                                                        0.5s
+ => [my-app 1/5] FROM docker.io/library/node:20-alpine@sha256:8e6a472eb9742f4f486ca9ef13321b7fc2e54f2f60814f339eeda2aff3037573  0.0s
+ => [my-app internal] load build context                                                                                        0.0s
+ => => transferring context: 170B                                                                                               0.0s
+ => CACHED [my-app 2/5] RUN mkdir -p /home/app                                                                                  0.0s
+ => CACHED [my-app 3/5] COPY ./app /home/app                                                                                    0.0s
+ => CACHED [my-app 4/5] WORKDIR /home/app                                                                                       0.0s
+ => CACHED [my-app 5/5] RUN npm install                                                                                         0.0s
+ => [my-app] exporting to image                                                                                                 0.0s
+ => => exporting layers                                                                                                         0.0s
+ => => writing image sha256:01ec4fc68b663367c5595cf54d7cf30cac0e3c0fd53beb3accdc04061e8d6509                                    0.0s
+ => => naming to docker.io/library/projects-my-app                                                                              0.0s
+[+] Running 4/4
+ ✔ Network projects_default            Created                                                                                  0.1s 
+ ✔ Container projects-my-app-1         Started                                                                                  0.0s 
+ ✔ Container projects-mongodb-1        Started                                                                                  0.0s 
+ ✔ Container projects-mongo-express-1  Started     
+```
+
+- `docker compose --project-name projects -f docker-compose.yaml stop`
+
+```bash
+gitpod /workspace/docker-compose-lab (main) $ docker compose --project-name projects -f docker-compose.yaml stop
+WARN[0000] The "MONGO_ADMIN_USER" variable is not set. Defaulting to a blank string. 
+WARN[0000] The "MONGO_ADMIN_PASS" variable is not set. Defaulting to a blank string. 
+WARN[0000] The "MONGO_ADMIN_USER" variable is not set. Defaulting to a blank string. 
+WARN[0000] The "MONGO_ADMIN_PASS" variable is not set. Defaulting to a blank string. 
+[+] Stopping 3/3
+ ✔ Container projects-mongo-express-1  Stopped                                                                                  0.3s 
+ ✔ Container projects-my-app-1         Stopped                                                                                 10.3s 
+ ✔ Container projects-mongodb-1        Stopped                                                                                  0.4s 
+gitpod /workspace/docker-compose-lab (main) $ 
+
+```
+
+- `export MONGO_ADMIN_USER=admin`
+- `export MONGO_ADMIN_PASS=supersecret`
+
+```bash
+gitpod /workspace/docker-compose-lab (main) $ docker compose --project-name projects -f docker-compose.yaml stop
+[+] Stopping 3/0
+ ✔ Container projects-mongo-express-1  Stopped                                                                                  0.0s 
+ ✔ Container projects-my-app-1         Stopped                                                                                  0.0s 
+ ✔ Container projects-mongodb-1        Stopped      
+```
+
+- `docker build -t akhlab/my-app:1.0 .`
+
+```bash
+gitpod /workspace/docker-compose-lab (main) $ docker build -t akhlab/my-app:1.0 .
+[+] Building 0.8s (10/10) FINISHED                                                                                    docker:default
+ => [internal] load .dockerignore                                                                                               0.0s
+ => => transferring context: 2B                                                                                                 0.0s
+ => [internal] load build definition from Dockerfile                                                                            0.0s
+ => => transferring dockerfile: 346B                                                                                            0.0s
+ => [internal] load metadata for docker.io/library/node:20-alpine                                                               0.8s
+ => [1/5] FROM docker.io/library/node:20-alpine@sha256:8e6a472eb9742f4f486ca9ef13321b7fc2e54f2f60814f339eeda2aff3037573         0.0s
+ => [internal] load build context                                                                                               0.0s
+ => => transferring context: 170B                                                                                               0.0s
+ => CACHED [2/5] RUN mkdir -p /home/app                                                                                         0.0s
+ => CACHED [3/5] COPY ./app /home/app                                                                                           0.0s
+ => CACHED [4/5] WORKDIR /home/app                                                                                              0.0s
+ => CACHED [5/5] RUN npm install                                                                                                0.0s
+ => exporting to image                                                                                                          0.0s
+ => => exporting layers                                                                                                         0.0s
+ => => writing image sha256:525de0188a536c521582b5405a7cd46bc7c7e20a32851eb9c04650a6fc899c7b                                    0.0s
+ => => naming to docker.io/akhlab/my-app:1.0     
+```
+
+```bash
+gitpod /workspace/docker-compose-lab (main) $ docker images
+REPOSITORY                  TAG       IMAGE ID       CREATED          SIZE
+docker-compose-lab-my-app   latest    7b290a350789   45 minutes ago   163MB
+projects-my-app             latest    01ec4fc68b66   45 minutes ago   163MB
+akhlab/my-app               1.0       525de0188a53   45 minutes ago   163MB
+mongo-express               latest    d4586446ca01   4 days ago       275MB
+mongo                       latest    e325fe350a8c   7 days ago       757MB
+gitpod /workspace/docker-compose-lab (main) $ 
+```
+
+## docker login
+```bash
+gitpod /workspace/docker-compose-lab (main) $ docker login
+Log in with your Docker ID or email address to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com/ to create one.
+You can log in with your password or a Personal Access Token (PAT). Using a limited-scope PAT grants better security and is required for organizations using SSO. Learn more at https://docs.docker.com/go/access-tokens/
+
+Username: akhlab
+Password: 
+WARNING! Your password will be stored unencrypted in /home/gitpod/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+```
+
+- `docker push  akhlab/my-app:1.0`
+
+```bash
+gitpod /workspace/docker-compose-lab (main) $ docker push  akhlab/my-app:1.0
+The push refers to repository [docker.io/akhlab/my-app]
+b8de80b2aeaa: Pushed 
+5f70bf18a086: Pushed 
+ebca44d68a5f: Pushed 
+cca85f9b14ec: Pushed 
+ecfacd0d8798: Mounted from library/node 
+744bd4df483e: Mounted from library/node 
+578859c2f80b: Mounted from library/node 
+5af4f8f59b76: Mounted from library/node 
+1.0: digest: sha256:1cc7d3b6ab13555a29092f930ab5f82cef8d02ec72f143997f818e06b6473182 size: 1991
+gitpod /workspace/docker-compose-lab (main) $ 
+```
+
+- `docker build -t akhlab/my-app:1.0 .`
+
+```bash
+gitpod /workspace/docker-compose-lab (main) $ docker build -t akhlab/my-app:1.0 .
+[+] Building 0.6s (10/10) FINISHED                                                                                                                                                                                  docker:default
+ => [internal] load .dockerignore                                                                                                                                                                                             0.0s
+ => => transferring context: 2B                                                                                                                                                                                               0.0s
+ => [internal] load build definition from Dockerfile                                                                                                                                                                          0.0s
+ => => transferring dockerfile: 346B                                                                                                                                                                                          0.0s
+ => [internal] load metadata for docker.io/library/node:20-alpine                                                                                                                                                             0.6s
+ => [1/5] FROM docker.io/library/node:20-alpine@sha256:8e6a472eb9742f4f486ca9ef13321b7fc2e54f2f60814f339eeda2aff3037573                                                                                                       0.0s
+ => [internal] load build context                                                                                                                                                                                             0.0s
+ => => transferring context: 79.48kB                                                                                                                                                                                          0.0s
+ => CACHED [2/5] RUN mkdir -p /home/app                                                                                                                                                                                       0.0s
+ => CACHED [3/5] COPY ./app /home/app                                                                                                                                                                                         0.0s
+ => CACHED [4/5] WORKDIR /home/app                                                                                                                                                                                            0.0s
+ => CACHED [5/5] RUN npm install                                                                                                                                                                                              0.0s
+ => exporting to image                                                                                                                                                                                                        0.0s
+ => => exporting layers                                                                                                                                                                                                       0.0s
+ => => writing image sha256:525de0188a536c521582b5405a7cd46bc7c7e20a32851eb9c04650a6fc899c7b                                                                                                                                  0.0s
+ => => naming to docker.io/akhlab/my-app:1.0 
+```
+
+
+
+- [Using Docker Compose Secret Reference](https://docs.docker.com/compose/use-secrets/)
